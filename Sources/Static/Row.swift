@@ -84,7 +84,7 @@ public struct Row: Hashable, Equatable {
         public let title: String
         
         /// Styling for button's action, used primarily for destructive actions.
-        public let style: UITableViewRowAction.Style
+        public let style: UIContextualAction.Style
         
         /// Background color of the button.
         public let backgroundColor: UIColor?
@@ -95,7 +95,7 @@ public struct Row: Hashable, Equatable {
         /// Invoked when selecting the action.
         public let selection: EditActionSelection?
         
-        public init(title: String, style: UITableViewRowAction.Style = .default, backgroundColor: UIColor? = nil, backgroundEffect: UIVisualEffect? = nil, selection: EditActionSelection? = nil) {
+        public init(title: String, style: UIContextualAction.Style = .normal, backgroundColor: UIColor? = nil, backgroundEffect: UIVisualEffect? = nil, selection: EditActionSelection? = nil) {
             self.title = title
             self.style = style
             self.backgroundColor = backgroundColor
@@ -103,6 +103,7 @@ public struct Row: Hashable, Equatable {
             self.selection = selection
         }
     }
+
 
     // MARK: - Properties
 

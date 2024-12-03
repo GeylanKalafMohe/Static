@@ -242,27 +242,24 @@ extension DataSource: UITableViewDataSource {
         return row(at: indexPath)?.canEdit ?? false
     }
 
-    @objc(tableView:editActionsForRowAtIndexPath:)
-    public func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        return row(at: indexPath)?.editActions.map {
-            action in
-            let rowAction = UITableViewRowAction(style: action.style, title: action.title) { (_, _) in
+    @objc(tableView:trailingSwipeActionsConfigurationForRowAtIndexPath:)
+    public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard let actions = row(at: indexPath)?.editActions else { return nil }
+
+        let contextualActions = actions.map { action -> UIContextualAction in
+            let contextualAction = UIContextualAction(style: action.style == .destructive ? .destructive : .normal, title: action.title) { (_, _, completionHandler) in
                 action.selection?(indexPath)
+                completionHandler(true) // Notify the system that the action was performed
             }
 
-            // These calls have side effects when setting to nil
-            // Setting a background color to nil will wipe out any predefined style
-            // Wrapping these in if-lets prevents nil-setting side effects
             if let backgroundColor = action.backgroundColor {
-                rowAction.backgroundColor = backgroundColor
+                contextualAction.backgroundColor = backgroundColor
             }
 
-            if let backgroundEffect = action.backgroundEffect {
-                rowAction.backgroundEffect = backgroundEffect
-            }
-
-            return rowAction
+            return contextualAction
         }
+
+        return UISwipeActionsConfiguration(actions: contextualActions)
     }
 
     public func sectionIndexTitles(for tableView: UITableView) -> [String]? {
